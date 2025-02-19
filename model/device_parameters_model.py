@@ -2,18 +2,21 @@
 
 class DeviceParametersModel:
     def __init__(self):
-        self.time_val = None
-        self.power_voltage = None
-        self.power_current = None
-        self.signal_voltage = None
-        self.signal_current = None
-        self.target_angle = None
-        self.angle = None
+        self.time = []
+        self.power_voltage = []
+        self.power_current = []
+        self.signal_voltage = []
+        self.signal_current = []
+        self.target_angle = []
+        self.angle = []
         self.log_file = None
 
     def update_data(self, key, value):
         if hasattr(self, key):
-            setattr(self, key, value)
+            array = getattr(self, key)
+            array.append(value)
+
+ 
 
     def log_data(self, data):
         if self.log_file is not None:

@@ -1,7 +1,6 @@
 from PyQt5.QtCore import QThread, pyqtSignal
 import socket
 from support.c_deserial import Deserial
-import data_setter
 from support.event_timer import EventTimer
 import time
 from support.constants import data_struct
@@ -11,17 +10,18 @@ class ReceiverThread(QThread):
     update_trigger = pyqtSignal()
     log_signal = pyqtSignal(bytes)
 
-    def __init__(self, ip, port, setter):
+    def __init__(self, ip, port, controller):
         super().__init__()
         self.ip = ip
         self.port = port
-        self.setter = setter
+        self.controller = controller
         self.deserial = Deserial(data_struct)
         self.running = True
+        self.last_data = None
 
         # Связываем сигналы
         self.update_trigger.connect(self.handle_update)
-        self.log_signal.connect(setter.log_data)
+        self.log_signal.connect(self.controller.log_data)
 
         self.et = EventTimer()
         self.et.add(0.05, lambda: self.update_trigger.emit())
@@ -31,11 +31,10 @@ class ReceiverThread(QThread):
             data: bytes = self.last_data
             data_dict = self.deserial.to_dict(data)
             
-            for key in data_dict.keys():
-                if hasattr(self.setter, key):
-                    getattr(self.setter, key)(data_dict[key])
+            for key, value in data_dict.items():
+                self.controller.update_data(key, value)
             
-            self.setter.update()
+            self.controller.update_view()
         except Exception as e:
             print(e)
 
@@ -49,7 +48,8 @@ class ReceiverThread(QThread):
             data, addr = sock.recvfrom(bufferSize)
             self.last_data = data
             self.log_signal.emit(data)
-            self.et.handle(time.time(), args=(data,))
+            self.et.handle(time.time())
+            # self.et.handle(time.time(), args=(data,))
 
         sock.close()
 
@@ -57,8 +57,7 @@ class ReceiverThread(QThread):
         self.running = False
         self.wait()
 
-
-def start(ip, port, setter):
-    thread = ReceiverThread(ip, port, setter)
+def start(ip, port, controller):
+    thread = ReceiverThread(ip, port, controller)
     thread.start()
     return thread
