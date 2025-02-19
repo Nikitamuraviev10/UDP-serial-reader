@@ -3,9 +3,9 @@ from PyQt5.QtWidgets import ( QMainWindow, QWidget, QVBoxLayout,
                             QTextEdit, QLabel, QLineEdit)
 from PyQt5.QtCore import Qt, pyqtSignal 
 from PyQt5.QtSerialPort import QSerialPortInfo
-from model.bench_model import Cmd
+from bench.model import Cmd
 
-class BenchView(QMainWindow):
+class BenchView(QWidget):
     connect_clicked = pyqtSignal(str, int)
     disconnect_clicked = pyqtSignal()
     command_sent = pyqtSignal(object, float)
@@ -13,15 +13,13 @@ class BenchView(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setup_ui()
+        self.name = "Bench"
 
     def setup_ui(self):
-        self.setWindowTitle("Bench Controller")
-        self.setGeometry(100, 100, 800, 600)
-        
-        # Main widget
-        central = QWidget()
-        self.setCentralWidget(central)
-        layout = QVBoxLayout(central)
+
+
+        layout = QVBoxLayout()
+        self.setLayout(layout)
 
         # Connection controls
         port_layout = QHBoxLayout()

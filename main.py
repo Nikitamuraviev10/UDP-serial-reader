@@ -1,40 +1,43 @@
 # main.py
 from PyQt5.QtWidgets import QApplication
+import sys
 
-from model.bench_model import BenchModel
-from view.bench_view import BenchView
-from controller.bench_controller import BenchController
+from bench.model import BenchModel
+from bench.view import BenchView
+from bench.controller import BenchController
 
-from controller.device_parameters_controller import DeviceParametersController
-from model.device_parameters_model import DeviceParametersModel
-from view.device_parameters_view import PlotWindowView
+from device_parameters.controller import DeviceParametersController
+from device_parameters.model import DeviceParametersModel
+from device_parameters.view import PlotWindowView
+from main.main_window import MainWindow
 from  receiver import ReceiverThread
 
-def main():
-    app = QApplication([])
-    
-    # model = BenchModel()
-    # view = BenchView()
-    # controller = BenchController(model, view)
-    
-    # view.show()
 
-    # Создаем модель, представление и контроллер
-    model = DeviceParametersModel()
-    view = PlotWindowView()
-    controller = DeviceParametersController(model, view)
+def main():
+    app = QApplication(sys.argv)
+    
+    bench_model = BenchModel()
+    bench_view = BenchView()
+    bench_controller = BenchController(bench_model, bench_view)
+
+    device_parameters_model = DeviceParametersModel()
+    device_parameters_view = PlotWindowView()
+    device_parameters_controller = DeviceParametersController(device_parameters_model, device_parameters_view)
 
     # Настройки для UDP-соединения
     ip = "localhost"  # Замените на нужный IP-адрес
     port = 41000  # Замените на нужный порт
 
     # Создаем и запускаем поток приема данных
-    receiver_thread = ReceiverThread(ip, port, controller)
+    receiver_thread = ReceiverThread(ip, port, device_parameters_controller)
     receiver_thread.start()
 
+    main_window = MainWindow((bench_view, device_parameters_view))
+    
+
     # Показываем главное окно
-    view.show()
-    app.exec_()
+    main_window.show()
+    sys.exit(app.exec_())
 
 if __name__ == "__main__":
     main()

@@ -4,7 +4,6 @@ import pyqtgraph as pg
 class RealtimePlot(pg.PlotWidget):
     def __init__(self, title, y_range, line1_name, line2_name, parent=None):
         super().__init__(parent)
-        
         self.setBackground('w')
         self.setTitle(title)
         self.setLabel('left', 'Value')
@@ -21,7 +20,7 @@ class RealtimePlot(pg.PlotWidget):
 class PlotWindowView(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
-        
+        self.name = "Realtime Plot"
         self.layout = QtWidgets.QHBoxLayout(self)
         
         self.voltage = RealtimePlot("Voltage", (0, 40), "Power", "Signal")
