@@ -17,8 +17,6 @@ class BenchView(QWidget):
         self.name = "Bench"
 
     def setup_ui(self):
-
-
         layout = QVBoxLayout()
         self.setLayout(layout)
 
@@ -32,7 +30,6 @@ class BenchView(QWidget):
         
         self.connect_btn = QPushButton("Connect")
         self.disconnect_btn = QPushButton("Disconnect")
-        self.disconnect_btn.setEnabled(False)
 
         port_layout.addWidget(QLabel("Port:"))
         port_layout.addWidget(self.port_combo)
@@ -78,6 +75,15 @@ class BenchView(QWidget):
         self.disconnect_btn.clicked.connect(self.disconnect_clicked.emit)
         self.send_btn.clicked.connect(self.handle_command)
 
+        # Connection state start update
+        self.disconnect_btn.setEnabled(False)
+        self.cmd_combo.setEnabled(False)
+        self.arg_input.setEnabled(False)
+        self.send_btn.setEnabled(False)
+        self.signal_enable.setEnabled(False)
+        self.power_enable.setEnabled(False)
+
+
     def refresh_ports(self):
         self.port_combo.clear()
         
@@ -103,6 +109,11 @@ class BenchView(QWidget):
         self.disconnect_btn.setEnabled(connected)
         self.port_combo.setEnabled(not connected)
         self.baud_spin.setEnabled(not connected)
+        self.cmd_combo.setEnabled(connected)
+        self.arg_input.setEnabled(connected)
+        self.send_btn.setEnabled(connected)
+        self.signal_enable.setEnabled(connected)
+        self.power_enable.setEnabled(connected)
 
     def log_data(self, data):
         self.log.append(f"Received: {str(data)}")
