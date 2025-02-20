@@ -1,10 +1,12 @@
+from bench.model import BenchModel
+from bench.view import BenchView
 from support.constants import Cmd
 
 
 class BenchController:
-    def __init__(self, model, view):
-        self.model = model
-        self.view = view
+    def __init__(self, model: BenchModel, view: BenchView):
+        self.model: BenchModel = model
+        self.view: BenchView = view
         
         # Connect signals
         self.view.connect_clicked.connect(self.handle_connect)

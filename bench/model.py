@@ -1,5 +1,5 @@
 from PyQt5.QtCore import QEventLoop, QObject, QTimer, pyqtSignal, QThread, QMutex, QMutexLocker
-from PyQt5.QtSerialPort import QSerialPort, QSerialPortInfo
+from PyQt5.QtSerialPort import QSerialPort
 import struct
 
 from support.constants import Cmd, Status

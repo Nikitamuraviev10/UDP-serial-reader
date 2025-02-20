@@ -8,7 +8,7 @@ from bench.controller import BenchController
 
 from device_parameters.controller import DeviceParametersController
 from device_parameters.model import DeviceParametersModel
-from device_parameters.view import PlotWindowView
+from device_parameters.view import DeviceParametersView
 from main.main_window import MainWindow
 from  receiver import ReceiverThread
 
@@ -21,7 +21,7 @@ def main():
     bench_controller = BenchController(bench_model, bench_view)
 
     device_parameters_model = DeviceParametersModel()
-    device_parameters_view = PlotWindowView()
+    device_parameters_view = DeviceParametersView()
     device_parameters_controller = DeviceParametersController(device_parameters_model, device_parameters_view)
 
     # Настройки для UDP-соединения

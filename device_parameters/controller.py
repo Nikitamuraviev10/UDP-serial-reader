@@ -1,7 +1,11 @@
+from device_parameters.model import DeviceParametersModel
+from device_parameters.view import DeviceParametersView
+
+
 class DeviceParametersController:
-    def __init__(self, model, view):
-        self.model = model
-        self.view = view
+    def __init__(self, model:DeviceParametersModel, view:DeviceParametersView):
+        self.model: DeviceParametersModel = model
+        self.view: DeviceParametersView = view
 
         # Connect 
         self.view.logging_checkbox.clicked.connect(self.log_enable)

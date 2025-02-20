@@ -4,16 +4,16 @@ import os
 
 class DeviceParametersModel:
     def __init__(self):
-        self.time = []
-        self.power_voltage = []
-        self.power_current = []
-        self.signal_voltage = []
-        self.signal_current = []
-        self.target_angle = []
-        self.angle = []
+        self.time: list = []
+        self.power_voltage: list = []
+        self.power_current: list = []
+        self.signal_voltage: list = []
+        self.signal_current: list = []
+        self.target_angle: list = []
+        self.angle: list = []
         self.log_file = None
 
-    def update_data(self, key, value):
+    def update_data(self, key, value) -> None:
         if hasattr(self, key):
             try:
                 array: list = getattr(self, key)
@@ -25,11 +25,11 @@ class DeviceParametersModel:
 
  
 
-    def log_data(self, data):
+    def log_data(self, data) -> None:
         if self.log_file is not None:
             self.log_file.write(data)
 
-    def log_enable(self, enable):
+    def log_enable(self, enable) -> None:
         now = datetime.now()
         name = now.strftime("%Y-%m-%d %H-%M-%S")
         name = f'data/{name}.bin'
