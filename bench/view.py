@@ -1,9 +1,10 @@
-from PyQt5.QtWidgets import ( QMainWindow, QWidget, QVBoxLayout, 
+from PyQt5.QtWidgets import ( QCheckBox, QWidget, QVBoxLayout, 
                             QHBoxLayout, QPushButton, QComboBox, QSpinBox,
                             QTextEdit, QLabel, QLineEdit)
 from PyQt5.QtCore import Qt, pyqtSignal 
 from PyQt5.QtSerialPort import QSerialPortInfo
-from bench.model import Cmd
+
+from support.constants import Cmd
 
 class BenchView(QWidget):
     connect_clicked = pyqtSignal(str, int)
@@ -53,13 +54,24 @@ class BenchView(QWidget):
         cmd_layout.addWidget(self.arg_input)
         cmd_layout.addWidget(self.send_btn)
 
+        #Fast controls
+        fast_controls_layout = QHBoxLayout()
+        
+        self.signal_enable = QCheckBox('Signal')
+        self.power_enable = QCheckBox('Power')
+
+        fast_controls_layout.addWidget(self.signal_enable)
+        fast_controls_layout.addWidget(self.power_enable)
+
         # Data display
         self.log = QTextEdit()
         self.log.setReadOnly(True)
 
         layout.addLayout(port_layout)
         layout.addLayout(cmd_layout)
+        layout.addLayout(fast_controls_layout)
         layout.addWidget(self.log)
+
 
         # Signals
         self.connect_btn.clicked.connect(self.handle_connect)

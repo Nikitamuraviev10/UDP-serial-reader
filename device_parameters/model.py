@@ -1,3 +1,5 @@
+from datetime import datetime
+import os
 
 
 class DeviceParametersModel:
@@ -13,8 +15,13 @@ class DeviceParametersModel:
 
     def update_data(self, key, value):
         if hasattr(self, key):
-            array = getattr(self, key)
-            array.append(value)
+            try:
+                array: list = getattr(self, key)
+                array.append(value)
+                if len(array) > 500:
+                    array.pop(0)
+            except AttributeError:
+                print(f"Attribute {key} not found in DeviceParametersModel")
 
  
 
@@ -23,8 +30,14 @@ class DeviceParametersModel:
             self.log_file.write(data)
 
     def log_enable(self, enable):
+        now = datetime.now()
+        name = now.strftime("%Y-%m-%d %H-%M-%S")
+        name = f'data/{name}.bin'
+        
         if enable:
-            self.log_file = open('log.bin', 'wb')
+            os.makedirs(os.path.dirname(name), exist_ok=True)
+            self.log_file = open(name, 'wb')
         else:
-            self.log_file.close()
-            self.log_file = None
+            if self.log_file is not None:
+                self.log_file.close()
+                self.log_file = None

@@ -21,15 +21,26 @@ class PlotWindowView(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
         self.name = "Realtime Plot"
-        self.layout = QtWidgets.QHBoxLayout(self)
+        self.layout = QtWidgets.QVBoxLayout(self)
         
+        #Checkbox init
+        checkbox_layout = QtWidgets.QHBoxLayout()
+        self.logging_checkbox = QtWidgets.QCheckBox("Logging")
+
+        checkbox_layout.addWidget(self.logging_checkbox)
+
+        #Plot init 
+        plot_layout = QtWidgets.QHBoxLayout()
         self.voltage = RealtimePlot("Voltage", (0, 40), "Power", "Signal")
         self.current = RealtimePlot("Current", (0, 10), "Power", "Signal")
         self.angle = RealtimePlot("Angle", (-180, 180), "Real", "Target")
         
-        self.layout.addWidget(self.voltage)
-        self.layout.addWidget(self.current)
-        self.layout.addWidget(self.angle)
+        plot_layout.addWidget(self.voltage)
+        plot_layout.addWidget(self.current)
+        plot_layout.addWidget(self.angle)
+
+        self.layout.addLayout(checkbox_layout)
+        self.layout.addLayout(plot_layout)
         
         self.show()
 

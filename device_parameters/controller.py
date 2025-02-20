@@ -3,6 +3,9 @@ class DeviceParametersController:
         self.model = model
         self.view = view
 
+        # Connect 
+        self.view.logging_checkbox.clicked.connect(self.log_enable)
+
     def update_data(self, key, value):
         self.model.update_data(key, value)
         

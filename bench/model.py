@@ -1,38 +1,9 @@
 from PyQt5.QtCore import QObject, pyqtSignal, QThread, QMutex, QMutexLocker
 from PyQt5.QtSerialPort import QSerialPort, QSerialPortInfo
 import struct
-from enum import Enum
 
-class Cmd(Enum):
-    Pop 		= 0
-    Clear 		= 1
-    Start 		= 2
-    Pause 		= 3
-    Reset 		= 4
-    StopData 	= 5
-    StartData 	= 6
-    ResetTime	= 7
-    To485 		= 8
-    SetMaxAngle = 9
-    SetOutut	= 10
-    ResetAngle  = 11
-    SetMaxPwm   = 12
-    SetMinPwm   = 13
-    # To push
-    SetAngle 	= 1024
-    Wait 		= 1025
-    FreqResp    = 1026
-    PowerEnable = 1027
-    SignalEnable = 1028
-    # Get
-    GetMaxAngle = 2048
+from support.constants import Cmd, Status
 
-class Status(Enum):
-    Ok				= 0
-    InvalidHead		= 1
-    InvalidCrc		= 2
-    IsFull			= 3
-    Done            = 4
 
 class BenchWorker(QObject):
     data_processed = pyqtSignal(object)
@@ -147,6 +118,10 @@ class BenchModel(QObject):
     def send_command(self, cmd, arg):
         self.worker.send_command(cmd, arg)
 
+    def execute_sequence(self, commands):
+        for cmd, arg in commands:
+            self.send_command(cmd, arg)
+            
     def handle_done(self):
         # Обработка завершения операции
         pass
