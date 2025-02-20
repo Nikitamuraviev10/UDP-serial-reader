@@ -1,4 +1,4 @@
-from PyQt5.QtCore import QObject, pyqtSignal, QThread, QMutex, QMutexLocker
+from PyQt5.QtCore import QEventLoop, QObject, QTimer, pyqtSignal, QThread, QMutex, QMutexLocker
 from PyQt5.QtSerialPort import QSerialPort, QSerialPortInfo
 import struct
 
@@ -18,6 +18,8 @@ class BenchWorker(QObject):
         self.mutex = QMutex()
         self.running = False
         self.out_f = None
+        self.last_response = None
+        self.response_received = False
 
     def connect_serial(self, port, baudrate):
         self.serial.setPortName(port)
@@ -44,19 +46,47 @@ class BenchWorker(QObject):
                 self.process_packet(status)
 
     def process_packet(self, status):
-        if status[1] == Status.Done:
+        cmd_id, value = status
+        
+        if cmd_id == Cmd.Done:
             self.done_signal.emit()
+        
+        self.last_response = value
+        self.response_received = True
+        self.command_result.emit()
+        
         self.data_processed.emit(status)
 
     def send_command(self, cmd, arg):
-        response = None
         try:
+            self.last_response = None
+            self.response_received = False
+            
             data = self.serialize(cmd, arg)
             with QMutexLocker(self.mutex):
                 self.serial.write(data)
-                self.serial.waitForBytesWritten(500)
+                if not self.serial.waitForBytesWritten(500):
+                    raise TimeoutError("Write timeout")
+
+            timer = QTimer(self)
+            timer.setSingleShot(True)
+            
+            loop = QEventLoop()
+            
+            timer.timeout.connect(loop.quit)
+            self.command_result.connect(loop.quit)
+            
+            timer.start(500)
+            loop.exec_() 
+
+            if not self.response_received:
+                raise TimeoutError("No response received within timeout")
+                
+            return self.last_response
+
         except Exception as e:
             self.error_occurred.emit(str(e))
+            raise
 
 
     def get_status(self, data):
@@ -121,7 +151,7 @@ class BenchModel(QObject):
     def execute_sequence(self, commands):
         for cmd, arg in commands:
             self.send_command(cmd, arg)
-            
+
     def handle_done(self):
         # Обработка завершения операции
         pass
