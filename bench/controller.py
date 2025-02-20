@@ -11,6 +11,7 @@ class BenchController:
         self.view.disconnect_clicked.connect(self.model.disconnect)
         self.view.command_sent.connect(self.handle_command)
         self.view.signal_enable.stateChanged.connect(self.fast_signal_enable_command)
+        self.view.power_enable.stateChanged.connect(self.fast_power_enable_command)
 
         self.model.data_updated.connect(self.view.log_data)
         self.model.error_occurred.connect(self.view.show_error)
