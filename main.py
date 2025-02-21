@@ -11,10 +11,14 @@ from device_parameters.model import DeviceParametersModel
 from device_parameters.view import DeviceParametersView
 from main.main_window import MainWindow
 from  receiver import ReceiverThread
+from sequence_sender.controller import SequenceSenderController
+from support.logger_init import setup_logging  
 
 
 def main():
     app = QApplication(sys.argv)
+
+    setup_logging()
     
     bench_model = BenchModel()
     bench_view = BenchView()
@@ -38,6 +42,8 @@ def main():
     # Показываем главное окно
     main_window.show()
     sys.exit(app.exec_())
+
+
 
 if __name__ == "__main__":
     main()
