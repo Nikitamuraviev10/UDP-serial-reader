@@ -1,16 +1,17 @@
 import yaml
 import logging
-from typing import Dict, Any, Callable
+from typing import Dict, Any, Callable, Optional, Type
 
 from bench.model import BenchModel
+from sequence_sender.command_registry import CommandRegistry
 from support.constants import Cmd
 
 class SequenceSenderModel:
-    def __init__(self, bench_model: BenchModel):
+    def __init__(self, bench_model: BenchModel, registry: Type[CommandRegistry]):
         self.bench_model: BenchModel = bench_model
         self.logger = logging.getLogger(self.__class__.__name__)
         self.execution_results: Dict[str, Any] = {}
-        self.command_registry: Dict[str, Callable] = {}
+        self.command_registry: Dict[str, tuple[Callable, Optional[object]]] = registry.get_commands()
 
     def load_config(self, file_path: str):
         try:
@@ -76,15 +77,17 @@ class SequenceSenderModel:
         if func_name not in self.command_registry:
             raise ValueError(f"Unregistered function: {func_name}")
 
-        kwargs = dict(section)
-
         try:
-            result = self.command_registry[func_name](**kwargs)
+            func, instance = self.command_registry[func_name]
+            if instance:
+                result = func(instance, **section)
+            else:
+                result = func(**section)
+            self.execution_results[func_name] = result
+            self.logger.info("Function '%s' executed successfully", func_name)
         except Exception as e:
-            self.logger.error(f"Ошибка выполнения функции {func_name}: {e}", exc_info=True)
-            raise RuntimeError(f"Ошибка выполнения функции {func_name}: {e}")
-
-        self.execution_results[func_name] = result
+            self.logger.error("Function execution failed: %s", str(e))
+            raise Exception("Function execution failed") from e
 
 
     def _parse_value(self, raw_value):
@@ -94,29 +97,3 @@ class SequenceSenderModel:
             return self.execution_results.get(var_name)
         return raw_value
     
-
-    def register(self, name: str = None) -> Callable:
-        """
-        Декоратор для регистрации пользовательских функций
-        
-        Пример использования:
-        
-        1. С явным указанием имени:
-        @controller.register("my_command")
-        def some_function(): ...
-        
-        2. С автоматическим именем (используется __name__ функции):
-        @controller.register()
-        def another_function(): ...
-        """
-        def decorator(func: Callable) -> Callable:
-            nonlocal name
-            final_name = name or func.__name__
-            
-            if final_name in self.command_registry:
-                raise ValueError(f"Function {final_name} already registered")
-                
-            self.command_registry[final_name] = func
-            return func
-            
-        return decorator

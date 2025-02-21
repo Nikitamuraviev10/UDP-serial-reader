@@ -1,6 +1,8 @@
 from datetime import datetime
 import os
 
+from sequence_sender.command_registry import CommandRegistry
+
 
 class DeviceParametersModel:
     def __init__(self):
@@ -29,7 +31,8 @@ class DeviceParametersModel:
         if self.log_file is not None:
             self.log_file.write(data)
 
-    def log_enable(self, enable) -> None:
+    @CommandRegistry.register("LogEnable", instance="self")
+    def log_enable(self, enable) :
         now = datetime.now()
         name = now.strftime("%Y-%m-%d %H-%M-%S")
         name = f'data/{name}.bin'
@@ -40,4 +43,7 @@ class DeviceParametersModel:
         else:
             if self.log_file is not None:
                 self.log_file.close()
+                name = self.log_file.name
                 self.log_file = None
+                return name
+                

@@ -1,15 +1,16 @@
-- Function:custom_function:
-    arg1: 1
-    arg2: 2
+- Function:LogEnable:
+    enable: true
 - Command:
-    SetMaxPwm: "$custom_function"
+    SetMaxPwm: 0.001
     SetMinPwm: 0.001
 - Function:custom_function:
     arg1: 1
     arg2: 3
-- Command:
-    SetMaxPwm: "$custom_function"
-    SetMinPwm: 0.001
+- Function:LogEnable:
+    enable: false
+# - Command:
+#     SetMaxPwm: "$LogEnable"
+#     SetMinPwm: 0.001
 - Settings:
     setting1: value1
     setting2: value2
