@@ -1,5 +1,7 @@
 .vscode
 .venv
-*.bin
 **/__pycache__
-/logs
+
+
+*.log
+*.bin

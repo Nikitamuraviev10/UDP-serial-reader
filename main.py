@@ -9,9 +9,15 @@ from bench.controller import BenchController
 from device_parameters.controller import DeviceParametersController
 from device_parameters.model import DeviceParametersModel
 from device_parameters.view import DeviceParametersView
-from main.main_window import MainWindow
-from  receiver import ReceiverThread
+
 from sequence_sender.controller import SequenceSenderController
+from sequence_sender.view import SequenceSenderView
+from sequence_sender.model import SequenceSenderModel
+
+from main.main_window import MainWindow
+
+from  receiver import ReceiverThread
+
 from support.logger_init import setup_logging  
 
 
@@ -36,7 +42,14 @@ def main():
     receiver_thread = ReceiverThread(ip, port, device_parameters_controller)
     receiver_thread.start()
 
-    main_window = MainWindow((bench_view, device_parameters_view))
+
+    # Создаем модуль отправки последовательности
+    sequence_model = SequenceSenderModel(bench_model)
+    sequence_view = SequenceSenderView()
+    sequence_controller = SequenceSenderController(sequence_model, sequence_view)
+    
+    # Создаем и показываем главное окно
+    main_window = MainWindow((bench_view,sequence_view, device_parameters_view))
     
 
     # Показываем главное окно
