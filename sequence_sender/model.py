@@ -40,28 +40,29 @@ class SequenceSenderModel:
         else:
             raise ValueError(f"Invalid configuration item: {item}")
 
-    def _process_command_section(self, section: dict):
+    def _process_command_section(self, section_list: dict):
         """Обработка секций с командами"""
 
-        self.logger.debug("Processing command section with %d commands", len(section))
+        self.logger.debug("Processing command section with %d commands", len(section_list))
 
         sequence = []
-        for cmd_key, raw_value in section.items():
-            try:
-                cmd = getattr(Cmd, cmd_key.strip())  # Получаем команду из перечисления Cmd
-                self.logger.debug("Resolved command: %s.%s", "Cmd", cmd_key)
-            except AttributeError:
-                raise ValueError(f"Invalid command: {cmd_key}")
+        for section in section_list:
+            for cmd_key, raw_value in section.items():
+                try:
+                    cmd = getattr(Cmd, cmd_key.strip())  # Получаем команду из перечисления Cmd
+                    self.logger.debug("Resolved command: %s.%s", "Cmd", cmd_key)
+                except AttributeError:
+                    raise ValueError(f"Invalid command: {cmd_key}")
 
-            if raw_value is None:
-                error_msg = f"Missing value for command: {cmd_key}"
-                self.logger.error(error_msg)
-                raise ValueError(f"Missing value for command: {cmd_key}")
+                if raw_value is None:
+                    error_msg = f"Missing value for command: {cmd_key}"
+                    self.logger.error(error_msg)
+                    raise ValueError(f"Missing value for command: {cmd_key}")
 
-            value = self._parse_value(raw_value)
-            sequence.append((cmd, value))
-            self.logger.debug("Added command to sequence: %s=%s", cmd.name, value)
-        
+                value = self._parse_value(raw_value)
+                sequence.append((cmd, value))
+                self.logger.debug("Added command to sequence: %s=%s", cmd.name, value)
+            
         try:
             self.bench_model.execute_sequence(sequence)
             self.logger.info("Command sequence executed successfully")
