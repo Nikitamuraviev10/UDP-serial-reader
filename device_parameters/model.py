@@ -31,8 +31,8 @@ class DeviceParametersModel:
         if self.log_file is not None:
             self.log_file.write(data)
 
-    @CommandRegistry.register("LogEnable", instance="self")
-    def log_enable(self, enable) :
+    # @CommandRegistry.register("LogEnable", instance="self")
+    def log_enable(self, enable:bool) :
         now = datetime.now()
         name = now.strftime("%Y-%m-%d %H-%M-%S")
         name = f'data/{name}.bin'

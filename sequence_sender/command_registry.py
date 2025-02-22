@@ -12,12 +12,8 @@ class CommandRegistry:
             nonlocal name, instance
             final_name = name or func.__name__
 
-            def wrapper(self=None, *args, **kwargs):
+            def wrapper(*args, **kwargs):
                 nonlocal instance
-                if instance == "self":
-                    instance = self
-                if instance:
-                    return func(instance, *args, **kwargs)
                 return func(*args, **kwargs)
 
             if final_name in cls._commands:
@@ -46,14 +42,8 @@ class CommandRegistry:
 
     @classmethod
     def execute(cls, command_name: str, *args: Any, **kwargs: Any) -> Any:
-        """
-        Выполняет зарегистрированную команду
-        """
         if command_name not in cls._commands:
             raise KeyError(f"Command '{command_name}' not found")
         
-        func, instance = cls._commands[command_name]
-        if instance:
-            return func(instance, *args, **kwargs)
-        else:
-            return func(*args, **kwargs)
+        func, _ = cls._commands[command_name]
+        return func(*args, **kwargs)

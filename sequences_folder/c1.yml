@@ -1,5 +1,8 @@
 - Function:LogEnable:
     enable: true
+- Function:sum:
+    a: 1
+    b: 2
 - Command:
     SetMaxPwm: 0.001
     SetMinPwm: 0.001
@@ -8,6 +11,7 @@
     arg2: 3
 - Function:LogEnable:
     enable: false
+
 # - Command:
 #     SetMaxPwm: "$LogEnable"
 #     SetMinPwm: 0.001

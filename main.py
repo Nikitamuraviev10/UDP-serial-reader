@@ -11,15 +11,19 @@ from device_parameters.model import DeviceParametersModel
 from device_parameters.view import DeviceParametersView
 
 from sequence_sender.command_registry import CommandRegistry
+import sequence_sender.command
+
 from sequence_sender.controller import SequenceSenderController
 from sequence_sender.view import SequenceSenderView
 from sequence_sender.model import SequenceSenderModel
+
 
 from main.main_window import MainWindow
 
 from  receiver import ReceiverThread
 
 from support.logger_init import setup_logging  
+
 
 
 def main():
@@ -45,7 +49,7 @@ def main():
 
 
     # Создаем модуль отправки последовательности
-    CommandRegistry.register("LogEnable", instance=device_parameters_model)(device_parameters_model.log_file)
+    CommandRegistry.register("LogEnable")(device_parameters_model.log_enable)
     sequence_model = SequenceSenderModel(bench_model, CommandRegistry)
     sequence_view = SequenceSenderView()
     sequence_controller = SequenceSenderController(sequence_model, sequence_view)

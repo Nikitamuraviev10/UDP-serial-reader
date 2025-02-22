@@ -79,10 +79,9 @@ class SequenceSenderModel:
 
         try:
             func, instance = self.command_registry[func_name]
-            if instance:
-                result = func(instance, **section)
-            else:
-                result = func(**section)
+
+            result = func(**section)
+
             self.execution_results[func_name] = result
             self.logger.info("Function '%s' executed successfully", func_name)
         except Exception as e:
