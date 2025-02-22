@@ -6,15 +6,9 @@
 - Command:
     SetMaxPwm: 0.001
     SetMinPwm: 0.001
-- Function:custom_function:
-    arg1: 1
-    arg2: 3
 - Function:LogEnable:
     enable: false
 
 # - Command:
 #     SetMaxPwm: "$LogEnable"
 #     SetMinPwm: 0.001
-- Settings:
-    setting1: value1
-    setting2: value2

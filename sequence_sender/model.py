@@ -11,7 +11,7 @@ class SequenceSenderModel:
         self.bench_model: BenchModel = bench_model
         self.logger = logging.getLogger(self.__class__.__name__)
         self.execution_results: Dict[str, Any] = {}
-        self.command_registry: Dict[str, tuple[Callable, Optional[object]]] = registry.get_commands()
+        self.command_registry: Dict[str, Callable] = registry.get_commands()
 
     def load_config(self, file_path: str):
         try:
@@ -78,7 +78,7 @@ class SequenceSenderModel:
             raise ValueError(f"Unregistered function: {func_name}")
 
         try:
-            func, instance = self.command_registry[func_name]
+            func = self.command_registry[func_name]
 
             result = func(**section)
 

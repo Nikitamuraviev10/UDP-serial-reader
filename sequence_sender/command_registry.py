@@ -1,32 +1,30 @@
-from functools import partial
 import logging
-from typing import Any, Callable, Dict, Optional, Tuple
+from typing import Any, Callable, Dict, Optional
 
 
 class CommandRegistry:
-    _commands: Dict[str, Tuple[Callable, Optional[object]]] = {}
+    _commands: Dict[str, Callable] = {}
 
     @classmethod
-    def register(cls, name: Optional[str] = None, instance: Any = None):
+    def register(cls, name: Optional[str] = None ):
         def decorator(func: Callable) -> Callable:
-            nonlocal name, instance
+            nonlocal name
             final_name = name or func.__name__
 
             def wrapper(*args, **kwargs):
-                nonlocal instance
                 return func(*args, **kwargs)
 
             if final_name in cls._commands:
                 raise KeyError(f"Command '{final_name}' already registered")
 
-            cls._commands[final_name] = (wrapper, instance)
+            cls._commands[final_name] = (wrapper)
             logging.debug(f"Command registered: {final_name}")
             return wrapper
 
         return decorator
     
     @classmethod
-    def get_commands(cls) -> Dict[str, Tuple[Callable, Optional[object]]]:
+    def get_commands(cls) -> Dict[str,Callable]:
         """
         Возвращает копию словаря зарегистрированных команд
         """
@@ -39,11 +37,3 @@ class CommandRegistry:
         """
         cls._commands.clear()
         logging.debug("Command registry cleared")
-
-    @classmethod
-    def execute(cls, command_name: str, *args: Any, **kwargs: Any) -> Any:
-        if command_name not in cls._commands:
-            raise KeyError(f"Command '{command_name}' not found")
-        
-        func, _ = cls._commands[command_name]
-        return func(*args, **kwargs)
