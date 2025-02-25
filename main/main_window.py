@@ -8,7 +8,7 @@ class MainWindow(QMainWindow):
         self.init_ui()
 
     def init_ui(self):
-        self.setWindowTitle("Serial Reader Rif corp.")
+        self.setWindowTitle("Serial Reader")
         self.setGeometry(100, 100, 600, 400)
 
         tabs = QTabWidget(self)
