@@ -3,12 +3,14 @@
 - Function:sum:
     a: 1
     b: 2
-- Command:
-    SetMaxPwm: 0.001
+- Command: [
+    SetMaxPwm: 0.001,
     SetMinPwm: 0.001
+    ]
+
 - Function:LogEnable:
     enable: false
 
-# - Command:
-#     SetMaxPwm: "$LogEnable"
-#     SetMinPwm: 0.001
+- Command:
+    SetMaxPwm: "$LogEnable" # функция возвращает имя файла в который записалось логирование
+    SetMinPwm: 0.001
