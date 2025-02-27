@@ -45,17 +45,17 @@ class BenchWorker(QObject):
                 status = self.get_status(data)
                 self.process_packet(status)
 
-    def process_packet(self, status):
-        cmd_id, value = status
+    def process_packet(self, response):
+        cmd_id, status = response
         
-        if cmd_id == Cmd.Done:
+        if cmd_id == Status.Ok:
             self.done_signal.emit()
         
-        self.last_response = value
+        self.last_response = status
         self.response_received = True
-        self.command_result.emit()
+        self.command_result.emit(status)
         
-        self.data_processed.emit(status)
+        self.data_processed.emit(response)
 
     def send_command(self, cmd, arg):
         try:
@@ -68,7 +68,7 @@ class BenchWorker(QObject):
                 if not self.serial.waitForBytesWritten(500):
                     raise TimeoutError("Write timeout")
 
-            timer = QTimer(self)
+            timer = QTimer()
             timer.setSingleShot(True)
             
             loop = QEventLoop()
