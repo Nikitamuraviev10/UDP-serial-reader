@@ -14,7 +14,7 @@ class BenchView(QWidget):
     def __init__(self):
         super().__init__()
         self.setup_ui()
-        self.name = "Bench"
+        self.name = "Главная"
 
     def setup_ui(self):
         layout = QVBoxLayout()
@@ -28,12 +28,12 @@ class BenchView(QWidget):
         self.baud_spin.setRange(9600, 115200)
         self.baud_spin.setValue(115200)
         
-        self.connect_btn = QPushButton("Connect")
-        self.disconnect_btn = QPushButton("Disconnect")
+        self.connect_btn = QPushButton("Присоединиться")
+        self.disconnect_btn = QPushButton("Отсоединиться")
 
-        port_layout.addWidget(QLabel("Port:"))
+        port_layout.addWidget(QLabel("Порт:"))
         port_layout.addWidget(self.port_combo)
-        port_layout.addWidget(QLabel("Baud:"))
+        port_layout.addWidget(QLabel("Скорость:"))
         port_layout.addWidget(self.baud_spin)
         port_layout.addWidget(self.connect_btn)
         port_layout.addWidget(self.disconnect_btn)
@@ -43,19 +43,19 @@ class BenchView(QWidget):
         self.cmd_combo = QComboBox()
         [self.cmd_combo.addItem(cmd.name) for cmd in Cmd]
         self.arg_input = QLineEdit("0")
-        self.send_btn = QPushButton("Send Command")
+        self.send_btn = QPushButton("Отправить команду")
         
-        cmd_layout.addWidget(QLabel("Command:"))
+        cmd_layout.addWidget(QLabel("Команда:"))
         cmd_layout.addWidget(self.cmd_combo)
-        cmd_layout.addWidget(QLabel("Argument:"))
+        cmd_layout.addWidget(QLabel("Аргумент:"))
         cmd_layout.addWidget(self.arg_input)
         cmd_layout.addWidget(self.send_btn)
 
         #Fast controls
         fast_controls_layout = QHBoxLayout()
         
-        self.signal_enable = QCheckBox('Signal')
-        self.power_enable = QCheckBox('Power')
+        self.signal_enable = QCheckBox('Сигнал')
+        self.power_enable = QCheckBox('Питание')
 
         fast_controls_layout.addWidget(self.signal_enable)
         fast_controls_layout.addWidget(self.power_enable)

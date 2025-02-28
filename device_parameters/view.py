@@ -18,12 +18,12 @@ class RealtimePlot(PlotWidget):
 class DeviceParametersView(QWidget):
     def __init__(self) -> None:
         super().__init__()
-        self.name = "Realtime Plot"
+        self.name = "Графики в реальном времени"
         self.layout = QVBoxLayout(self)
         
         #Checkbox init
         checkbox_layout = QHBoxLayout()
-        self.logging_checkbox = QCheckBox("Logging")
+        self.logging_checkbox = QCheckBox("Логирование")
 
         checkbox_layout.addWidget(self.logging_checkbox)
 
