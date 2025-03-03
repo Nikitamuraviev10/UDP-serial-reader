@@ -77,11 +77,16 @@ class SequenceSenderModel:
 
         if func_name not in self.command_registry:
             raise ValueError(f"Unregistered function: {func_name}")
+        
+        result_input = {}
+
+        for var, raw_value in section.items():
+            result_input[var] = self._parse_value(raw_value)
 
         try:
             func = self.command_registry[func_name]
 
-            result = func(**section)
+            result = func(**result_input)
 
             self.execution_results[func_name] = result
             self.logger.info("Function '%s' executed successfully", func_name)

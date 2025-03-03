@@ -1,0 +1,49 @@
+- Function:LogEnable:
+    enable: true
+- Command: [
+    SetAngle: 20.0,
+    Wait: 1.0,
+    SetAngle: -20.0,
+    Wait: 1.0,
+    SetAngle: 20.0,
+    Wait: 1.0,
+    SetAngle: -20.0,
+    Wait: 1.0,
+    SetAngle: 20.0,
+    Wait: 1.0,
+    SetAngle: -20.0,
+    Wait: 1.0,
+    SetAngle: 20.0,
+    Wait: 1.0,
+    SetAngle: -20.0,
+    Wait: 1.0,
+    SetAngle: 20.0,
+    Wait: 1.0,
+    SetAngle: -20.0,
+    Wait: 1.0,
+    SetAngle: 20.0,
+    Wait: 1.0,
+    SetAngle: -20.0,
+    Wait: 1.0,
+    SetAngle: 20.0,
+    Wait: 1.0,
+    SetAngle: -20.0,
+    Wait: 1.0,
+    SetAngle: 20.0,
+    Wait: 1.0,
+    SetAngle: -20.0,
+    Wait: 1.0,
+    SetAngle: 20.0,
+    Wait: 1.0,
+    SetAngle: -20.0,
+    Wait: 1.0,
+    SetAngle: 20.0,
+    Wait: 1.0,
+    SetAngle: -20.0,
+    Wait: 1.0,
+    SetAngle: 0.0
+    ]
+
+- Function:LogEnable:
+    enable: false
+
