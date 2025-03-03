@@ -29,7 +29,6 @@ from support.logger_init import setup_logging
 def main():
     app = QApplication(sys.argv)
 
-    setup_logging()
     
     bench_model = BenchModel()
     bench_view = BenchView()
