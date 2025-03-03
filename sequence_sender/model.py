@@ -2,12 +2,15 @@ import yaml
 import logging
 from typing import Dict, Any, Callable, Optional, Type
 
+from PyQt5.QtCore import QEventLoop, QObject, QTimer
+
 from bench.model import BenchModel
 from sequence_sender.command_registry import CommandRegistry
 from support.constants import Cmd
 
-class SequenceSenderModel:
+class SequenceSenderModel(QObject):
     def __init__(self, bench_model: BenchModel, registry: Type[CommandRegistry]):
+        super().__init__()
         self.bench_model: BenchModel = bench_model
         self.logger = logging.getLogger(self.__class__.__name__)
         self.execution_results: Dict[str, Any] = {}
@@ -33,6 +36,8 @@ class SequenceSenderModel:
             for section_type, content in item.items():
                 if section_type.startswith('Function:'):
                     self._process_function_section(section_type[9:], content)
+                elif section_type.startswith('Function_Blocking:'):
+                    self._process_blocking_function_section(section_type[18:], content)
                 elif section_type == 'Command':
                     self._process_command_section(content)
                 else:
@@ -94,6 +99,39 @@ class SequenceSenderModel:
             self.logger.error("Function execution failed: %s", str(e))
             raise Exception("Function execution failed") from e
 
+
+    def _process_blocking_function_section(self, func_name: str, section: dict):
+
+        self.logger.info("Processing blocking function '%s'", func_name)
+
+        if func_name not in self.command_registry:
+            raise ValueError(f"Unregistered function: {func_name}")
+        
+        loop = QEventLoop()
+        timer = QTimer()
+
+        timer.setSingleShot(True)
+        timer.timeout.connect(loop.quit)
+        self.bench_model.handle_done.connect(loop.quit)
+        timer.start(1000*200)  
+
+        loop.exec_()
+
+        result_input = {}
+
+        for var, raw_value in section.items():
+            result_input[var] = self._parse_value(raw_value)
+
+        try:
+            func = self.command_registry[func_name]
+
+            result = func(**result_input)
+
+            self.execution_results[func_name] = result
+            self.logger.info("Function '%s' executed successfully", func_name)
+        except Exception as e:
+            self.logger.error("Function execution failed: %s", str(e))
+            raise Exception("Function execution failed") from e
 
     def _parse_value(self, raw_value):
         """Обработка значений с переменных """

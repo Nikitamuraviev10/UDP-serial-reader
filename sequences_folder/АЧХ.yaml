@@ -20,7 +20,8 @@
     Start: 0.0,
     ]
 
-- Function:LogEnable:
+
+- Function_Blocking:LogEnable:
     enable: false
 
 - Function:run_analysis:

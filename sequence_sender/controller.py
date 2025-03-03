@@ -22,4 +22,3 @@ class SequenceSenderController:
             self.logger.error(str(e))
             self.view.show_error(str(e))
 
-    # Дополнительные обработчики событий

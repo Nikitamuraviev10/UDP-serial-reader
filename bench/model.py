@@ -123,7 +123,7 @@ class BenchModel(QObject):
     command_completed = pyqtSignal(object)
     connection_changed = pyqtSignal(bool)
     error_occurred = pyqtSignal(str)
-
+    handle_done = pyqtSignal()
     def __init__(self):
         super().__init__()
         self.worker = BenchWorker()
@@ -152,9 +152,6 @@ class BenchModel(QObject):
         for cmd, arg in commands:
             self.send_command(cmd, arg)
 
-    def handle_done(self):
-        print("done")
-        return True
 
     def __del__(self):
         self.thread.quit()
