@@ -103,9 +103,6 @@ class SequenceSenderModel(QObject):
     def _process_blocking_function_section(self, func_name: str, section: dict):
 
         self.logger.info("Processing blocking function '%s'", func_name)
-
-        if func_name not in self.command_registry:
-            raise ValueError(f"Unregistered function: {func_name}")
         
         loop = QEventLoop()
         timer = QTimer()
@@ -117,21 +114,7 @@ class SequenceSenderModel(QObject):
 
         loop.exec_()
 
-        result_input = {}
-
-        for var, raw_value in section.items():
-            result_input[var] = self._parse_value(raw_value)
-
-        try:
-            func = self.command_registry[func_name]
-
-            result = func(**result_input)
-
-            self.execution_results[func_name] = result
-            self.logger.info("Function '%s' executed successfully", func_name)
-        except Exception as e:
-            self.logger.error("Function execution failed: %s", str(e))
-            raise Exception("Function execution failed") from e
+        self._process_blocking_function_section(func_name, section)
 
     def _parse_value(self, raw_value):
         """Обработка значений с переменных """
