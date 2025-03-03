@@ -1,0 +1,28 @@
+- Function:LogEnable:
+    enable: true
+- Command: [
+    Clear: 0.0,
+    FreqResp: 1.0,
+    FreqResp: 2.0,
+    # FreqResp: 3.0,
+    # FreqResp: 4.0,
+    # FreqResp: 5.0,
+    # FreqResp: 6.0,
+    # FreqResp: 7.0,
+    # FreqResp: 8.0,
+    # FreqResp: 9.0,
+    # FreqResp: 10.0,
+    # FreqResp: 11.0,
+    # FreqResp: 12.0,
+    # FreqResp: 13.0,
+    # FreqResp: 14.0,
+    # FreqResp: 15.0,
+    Start: 0.0,
+    ]
+
+
+- Function_Blocking:LogEnable:
+    enable: false
+
+- Function:run_analysis:
+    file_name: "$LogEnable"
