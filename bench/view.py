@@ -30,6 +30,8 @@ class BenchView(QWidget):
         
         self.connect_btn = QPushButton("Присоединиться")
         self.disconnect_btn = QPushButton("Отсоединиться")
+        self.clear_btn = QPushButton("Очистить")
+        
 
         port_layout.addWidget(QLabel("Порт:"))
         port_layout.addWidget(self.port_combo)
@@ -63,17 +65,20 @@ class BenchView(QWidget):
         # Data display
         self.log = QTextEdit()
         self.log.setReadOnly(True)
+        
 
         layout.addLayout(port_layout)
         layout.addLayout(cmd_layout)
         layout.addLayout(fast_controls_layout)
         layout.addWidget(self.log)
+        layout.addWidget(self.clear_btn)
 
 
         # Signals
         self.connect_btn.clicked.connect(self.handle_connect)
         self.disconnect_btn.clicked.connect(self.disconnect_clicked.emit)
         self.send_btn.clicked.connect(self.handle_command)
+        self.clear_btn.clicked.connect(self.log.clear)
 
         # Connection state start update
         self.disconnect_btn.setEnabled(False)
