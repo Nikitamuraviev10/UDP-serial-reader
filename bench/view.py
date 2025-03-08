@@ -30,7 +30,8 @@ class BenchView(QWidget):
         
         self.connect_btn = QPushButton("Присоединиться")
         self.disconnect_btn = QPushButton("Отсоединиться")
-        self.clear_btn = QPushButton("Очистить")
+
+
         
 
         port_layout.addWidget(QLabel("Порт:"))
@@ -67,11 +68,24 @@ class BenchView(QWidget):
         self.log.setReadOnly(True)
         
 
+        # Footer
+        footer_layout = QHBoxLayout()
+        self.clear_btn = QPushButton("Очистить")
+        self.fake_done_btn = QPushButton("Завершить чтение") #fake done
+
+        footer_layout.addWidget(self.clear_btn)
+        footer_layout.addStretch()
+        footer_layout.addWidget(self.fake_done_btn)
+
+
+
         layout.addLayout(port_layout)
         layout.addLayout(cmd_layout)
         layout.addLayout(fast_controls_layout)
+
         layout.addWidget(self.log)
-        layout.addWidget(self.clear_btn)
+
+        layout.addLayout(footer_layout)
 
 
         # Signals

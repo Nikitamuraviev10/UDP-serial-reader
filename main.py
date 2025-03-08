@@ -1,4 +1,3 @@
-# main.py
 from PyQt5.QtWidgets import QApplication
 import sys
 
@@ -65,4 +64,5 @@ def main():
 
 
 if __name__ == "__main__":
+    setup_logging()
     main()

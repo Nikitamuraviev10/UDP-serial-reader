@@ -34,4 +34,3 @@ def setup_logging():
     logger.info("Logging system initialized")
 
 
-setup_logging()

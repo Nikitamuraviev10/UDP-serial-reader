@@ -14,6 +14,7 @@ class BenchController:
         self.view.command_sent.connect(self.handle_command)
         self.view.signal_enable.stateChanged.connect(self.fast_signal_enable_command)
         self.view.power_enable.stateChanged.connect(self.fast_power_enable_command)
+        self.view.fake_done_btn.clicked.connect(self.model.handle_done.emit)
 
         self.model.data_updated.connect(self.view.log_data)
         self.model.error_occurred.connect(self.view.show_error)
