@@ -1,3 +1,4 @@
+from datetime import datetime
 import logging
 import sys
 from pathlib import Path
@@ -15,7 +16,7 @@ def setup_logging():
 
     handlers = [
         logging.FileHandler(
-            filename=logs_dir / "app.log",
+            filename=logs_dir / f"{datetime.now().strftime('%Y-%m-%d')}.log",
             encoding="utf-8"
         ),
         logging.StreamHandler(sys.stdout)
