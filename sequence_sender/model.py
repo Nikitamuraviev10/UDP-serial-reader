@@ -48,37 +48,37 @@ class SequenceSenderModel(QObject):
     def _process_command_section(self, section_list: dict):
         """Обработка секций с командами"""
 
-        self.logger.debug("Processing command section with %d commands", len(section_list))
+        self.logger.debug(f"Processing command section with {len(section_list)} commands")
 
         sequence = []
         for section in section_list:
             for cmd_key, raw_value in section.items():
                 try:
                     cmd = getattr(Cmd, cmd_key.strip())  # Получаем команду из перечисления Cmd
-                    self.logger.debug("Resolved command: %s.%s", "Cmd", cmd_key)
+                    self.logger.debug(f"Resolved command: Cmd.{cmd_key}")
                 except AttributeError:
                     raise ValueError(f"Invalid command: {cmd_key}")
 
                 if raw_value is None:
                     error_msg = f"Missing value for command: {cmd_key}"
                     self.logger.error(error_msg)
-                    raise ValueError(f"Missing value for command: {cmd_key}")
+                    raise ValueError(error_msg)
 
                 value = self._parse_value(raw_value)
                 sequence.append((cmd, value))
-                self.logger.debug("Added command to sequence: %s=%s", cmd.name, value)
+                self.logger.debug(f"Added command to sequence: {cmd.name}={value}")
             
         try:
             self.bench_model.execute_sequence(sequence)
             self.logger.info("Command sequence executed successfully")
         except Exception as e:
-            self.logger.error("Failed to execute command sequence: %s", str(e), exc_info=True)
+            self.logger.error(f"Failed to execute command sequence: {str(e)}", exc_info=True)
             raise
  
     def _process_function_section(self, func_name: str, section: dict):
         """Обработка секций с функциями"""
 
-        self.logger.info("Processing function '%s'", func_name)
+        self.logger.info(f"Processing function '{func_name}'")
 
         if func_name not in self.command_registry:
             raise ValueError(f"Unregistered function: {func_name}")
@@ -94,15 +94,14 @@ class SequenceSenderModel(QObject):
             result = func(**result_input)
 
             self.execution_results[func_name] = result
-            self.logger.info("Function '%s' executed successfully", func_name)
+            self.logger.info(f"Function '{func_name}' executed successfully")
         except Exception as e:
-            self.logger.error("Function execution failed: %s", str(e))
+            self.logger.error(f"Function execution failed: {str(e)}")
             raise Exception("Function execution failed") from e
-
 
     def _process_blocking_function_section(self, func_name: str, section: dict):
 
-        self.logger.info("Processing blocking function '%s'", func_name)
+        self.logger.info(f"Processing blocking function '{func_name}'")
         
         loop = QEventLoop()
         timer = QTimer()
@@ -123,5 +122,3 @@ class SequenceSenderModel(QObject):
             var_name = raw_value[1:]
             return self.execution_results.get(var_name)
         return raw_value
-    
-
