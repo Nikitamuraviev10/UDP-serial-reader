@@ -21,6 +21,7 @@ from main.main_window import MainWindow
 
 from  receiver import ReceiverThread
 
+from support.config_parser import ConfigManager
 from support.logger_init import setup_logging  
 
 
@@ -28,7 +29,8 @@ from support.logger_init import setup_logging
 def main():
     app = QApplication(sys.argv)
 
-    
+    config = ConfigManager()
+
     bench_model = BenchModel()
     bench_view = BenchView()
     bench_controller = BenchController(bench_model, bench_view)
@@ -38,8 +40,8 @@ def main():
     device_parameters_controller = DeviceParametersController(device_parameters_model, device_parameters_view)
 
     # Настройки для UDP-соединения
-    ip = "localhost"  # Замените на нужный IP-адрес
-    port = 41000  # Замените на нужный порт
+    ip = config.get('Network', 'ip', fallback='localhost')
+    port = config.get_int('Network', 'port', fallback=41000)
 
     # Создаем и запускаем поток приема данных
     receiver_thread = ReceiverThread(ip, port, device_parameters_controller)

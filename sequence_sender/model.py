@@ -109,12 +109,13 @@ class SequenceSenderModel(QObject):
 
         timer.setSingleShot(True)
         timer.timeout.connect(loop.quit)
+        timer.timeout.connect(lambda: self.logger.info("Blocking Function Timeout"))
         self.bench_model.handle_done.connect(loop.quit)
         timer.start(1000*200)  
 
         loop.exec_()
 
-        self._process_blocking_function_section(func_name, section)
+        self._process_function_section(func_name, section)
 
     def _parse_value(self, raw_value):
         """Обработка значений с переменных """
@@ -123,3 +124,4 @@ class SequenceSenderModel(QObject):
             return self.execution_results.get(var_name)
         return raw_value
     
+
